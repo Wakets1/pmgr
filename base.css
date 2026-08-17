@@ -378,3 +378,77 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   width: 14px;
   height: 14px;
 }
+
+/* 输入框带按钮组合 (用于验证码) */
+.input-with-btn {
+  display: flex;
+  gap: var(--density-space-sm);
+}
+
+.input-with-btn .form-input {
+  flex: 1;
+}
+
+.btn-code {
+  padding: var(--density-space-sm) var(--density-space-md);
+  background-color: var(--c-accent-soft);
+  color: var(--c-accent);
+  border-radius: var(--density-radius);
+  font-size: calc(13px * var(--density-font-scale));
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.btn-code:hover:not(:disabled) {
+  background-color: var(--c-accent);
+  color: var(--c-on-accent);
+}
+
+.btn-code:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   密度切换 Tab (Density Toggle Tab)
+   ========================================= */
+.density-tab {
+  display: flex;
+  background-color: var(--c-sunken);
+  border-radius: var(--density-radius);
+  padding: 2px;
+  gap: 2px;
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: calc(var(--density-radius) - 2px);
+  color: var(--c-text-3);
+  background: transparent;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover {
+  color: var(--c-text-2);
+  background-color: var(--c-raise);
+}
+
+.tab-btn.active {
+  background-color: var(--c-surface);
+  color: var(--c-accent);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.tab-btn i {
+  font-size: 18px;
+}
+
+/* 主题按钮特殊样式 */
+.theme-btn {
+  margin-left: var(--density-space-xs);
+}
