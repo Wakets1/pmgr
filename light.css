@@ -1,0 +1,32 @@
+:root {
+  /* —— 颜色 · 基础 —— */
+  --c-bg:        #f2f4ef;
+  --c-surface:   #ffffff;
+  --c-raise:     #f8faf6;
+  --c-sunken:    #e9ece5;
+  --c-border:    #d7dbd1;
+  --c-border-hi: #b7bdae;
+
+  /* —— 颜色 · 文字（三级）—— */
+  --c-text-1: #20251f;
+  --c-text-2: #5b6357;
+  --c-text-3: #8f968a;
+
+  /* —— 颜色 · 强调 —— */
+  --c-accent:        #0e7a5c;
+  --c-accent-hover:  #0b6a50;
+  --c-accent-active: #095a44;
+  --c-accent-soft:   #ddefe7;
+  --c-on-accent:     #ffffff;
+
+  /* —— 颜色 · 状态 —— */
+  --c-ok:        #1d8348;
+  --c-ok-soft:   #ddf1e2;
+  --c-warn:      #a96a00;
+  --c-warn-soft: #faedcf;
+  --c-err:       #bf3b30;
+  --c-err-soft:  #f9e4e1;
+  --c-on-err:    #ffffff;
+  --c-info:      #1f6fb2;
+  --c-info-soft: #e0edf8;
+}

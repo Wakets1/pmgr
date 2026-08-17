@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>进程管理</title>
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="light.css" id="theme-css" />
+  <!-- 引入 Remix Icon 图标库 -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    /* 页面特有样式 */
+    .page-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <!-- 公共头部 -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-box">P</div>
+      <h1 class="app-title">进程管理</h1>
+    </div>
+    <div class="header-right">
+      <!-- 密度切换 Tab -->
+      <div class="density-tab">
+        <button class="tab-btn active" data-density="compact" title="紧凑模式">
+          <i class="ri-layout-grid-fill"></i>
+        </button>
+        <button class="tab-btn" data-density="comfortable" title="舒适模式">
+          <i class="ri-layout-masonry-fill"></i>
+        </button>
+      </div>
+      <!-- 主题切换按钮 -->
+      <button class="icon-btn theme-btn" id="theme-toggle" title="切换主题">
+        <i class="ri-sun-line" id="theme-icon"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <!-- 进程列表区域 -->
+    <div class="process-list" id="process-list">
+      <!-- 由 JS 动态生成 -->
+    </div>
+  </div>
+
+  <script>
+    // ===========================
+    // 模拟数据
+    // ===========================
+    const processes = [
+      {
+        id: 1,
+        name: "Chrome Browser",
+        pid: 1024,
+        status: "running",
+        children: [
+          { name: "Renderer Process", cpu: "12.5%", mem: "256 MB" },
+          { name: "GPU Process", cpu: "3.2%", mem: "128 MB" },
+          { name: "Network Service", cpu: "1.1%", mem: "64 MB" }
+        ]
+      },
+      {
+        id: 2,
+        name: "VS Code",
+        pid: 2048,
+        status: "running",
+        children: [
+          { name: "Extension Host", cpu: "5.4%", mem: "180 MB" },
+          { name: "Search Service", cpu: "2.1%", mem: "90 MB" }
+        ]
+      },
+      {
+        id: 3,
+        name: "Docker Desktop",
+        pid: 3072,
+        status: "paused",
+        children: [
+          { name: "VM Worker", cpu: "0.0%", mem: "512 MB" },
+          { name: "API Server", cpu: "0.5%", mem: "64 MB" },
+          { name: "Kubelet", cpu: "1.2%", mem: "128 MB" },
+          { name: "Proxy Service", cpu: "0.3%", mem: "32 MB" }
+        ]
+      },
+      {
+        id: 4,
+        name: "MySQL Server",
+        pid: 4096,
+        status: "stopped",
+        children: [
+          { name: "InnoDB Engine", cpu: "0.0%", mem: "0 MB" },
+          { name: "Query Cache", cpu: "0.0%", mem: "0 MB" }
+        ]
+      }
+    ];
+
+    // ===========================
+    // 工具函数
+    // ===========================
+    
+    // 根据名称首字母生成头像颜色和字符
+    function getAvatarInfo(name) {
+      const char = name.charAt(0).toUpperCase();
+      const colors = [
+        '#0e7a5c', '#1f6fb2', '#a96a00', '#bf3b30', 
+        '#8e24aa', '#3949ab', '#00897b', '#5d4037'
+      ];
+      
+      // 简单哈希算法，使相同名称总是得到相同颜色
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const colorIndex = Math.abs(hash) % colors.length;
+      
+      return {
+        char: char,
+        color: colors[colorIndex]
+      };
+    }
+
+    // 状态文本映射
+    function getStatusText(status) {
+      const map = {
+        running: '运行中',
+        paused: '已暂停',
+        stopped: '已停止'
+      };
+      return map[status] || status;
+    }
+
+    // ===========================
+    // 渲染进程列表
+    // ===========================
+    function renderProcesses() {
+      const container = document.getElementById('process-list');
+      container.innerHTML = '';
+
+      processes.forEach(proc => {
+        const avatar = getAvatarInfo(proc.name);
+        
+        const item = document.createElement('div');
+        item.className = 'process-item';
+        item.dataset.id = proc.id;
+
+        item.innerHTML = `
+          <div class="process-main">
+            <div class="proc-avatar" style="background-color: ${avatar.color}">
+              ${avatar.char}
+            </div>
+            <div class="proc-info">
+              <div class="proc-name">${proc.name}</div>
+              <div class="proc-meta">
+                <span>PID: ${proc.pid}</span>
+                <span class="proc-status status-${proc.status}">● ${getStatusText(proc.status)}</span>
+              </div>
+            </div>
+            <svg class="icon-svg proc-expand-icon" viewBox="0 0 24 24">
+              <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+            </svg>
+          </div>
+          <div class="sub-processes">
+            <div class="sub-list">
+              ${proc.children.map(child => `
+                <div class="sub-item">
+                  <span class="sub-name">${child.name}</span>
+                  <span class="sub-stat">CPU: ${child.cpu} | MEM: ${child.mem}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+
+        // 点击展开/收起
+        item.querySelector('.process-main').addEventListener('click', () => {
+          item.classList.toggle('expanded');
+        });
+
+        container.appendChild(item);
+      });
+    }
+
+    // ===========================
+    // 主题切换逻辑
+    // ===========================
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeCss = document.getElementById('theme-css');
+    const densityTabs = document.querySelectorAll('[data-density]');
+
+    // 初始化主题
+    function initTheme() {
+      const savedTheme = localStorage.getItem('pm-theme');
+      const savedDensity = localStorage.getItem('pm-density');
+      
+      // 主题
+      if (savedTheme === 'dark') {
+        themeCss.href = 'dark.css';
+        themeIcon.className = 'ri-moon-line';
+        themeToggle.classList.add('active');
+      } else {
+        themeCss.href = 'light.css';
+        themeIcon.className = 'ri-sun-line';
+        themeToggle.classList.remove('active');
+      }
+
+      // 密度
+      if (savedDensity === 'comfortable') {
+        document.body.classList.add('mode-comfortable');
+        densityTabs.forEach(tab => {
+          if (tab.dataset.density === 'comfortable') {
+            tab.classList.add('active');
+          } else {
+            tab.classList.remove('active');
+          }
+        });
+      } else {
+        document.body.classList.remove('mode-comfortable');
+        densityTabs.forEach(tab => {
+          if (tab.dataset.density === 'compact') {
+            tab.classList.add('active');
+          } else {
+            tab.classList.remove('active');
+          }
+        });
+      }
+    }
+
+    // 切换主题
+    themeToggle.addEventListener('click', () => {
+      const isDark = themeCss.getAttribute('href') === 'dark.css';
+      
+      if (isDark) {
+        themeCss.href = 'light.css';
+        themeIcon.className = 'ri-sun-line';
+        themeToggle.classList.remove('active');
+        localStorage.setItem('pm-theme', 'light');
+      } else {
+        themeCss.href = 'dark.css';
+        themeIcon.className = 'ri-moon-line';
+        themeToggle.classList.add('active');
+        localStorage.setItem('pm-theme', 'dark');
+      }
+    });
+
+    // 密度模式切换 (Tab 方式)
+    densityTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const density = tab.dataset.density;
+        
+        // 更新 Tab 状态
+        densityTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // 应用密度模式
+        if (density === 'comfortable') {
+          document.body.classList.add('mode-comfortable');
+          localStorage.setItem('pm-density', 'comfortable');
+        } else {
+          document.body.classList.remove('mode-comfortable');
+          localStorage.setItem('pm-density', 'compact');
+        }
+      });
+    });
+
+    // 初始化
+    initTheme();
+    renderProcesses();
+  </script>
+</body>
+</html>
