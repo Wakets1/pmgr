@@ -14,6 +14,19 @@ body {
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
+/* Density Mode - Default to Compact */
+body[data-density="comfortable"] {
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --font-size-xs: 0.875rem;
+  --font-size-sm: 1rem;
+  --font-size-md: 1.125rem;
+  --font-size-lg: 1.25rem;
+}
+
 /* Container */
 .container {
   max-width: 1200px;
@@ -323,4 +336,184 @@ input:checked + .toggle-slider:before {
   top: var(--space-lg);
   right: var(--space-lg);
   z-index: 1000;
+}
+
+/* Process Tree - Collapsible Items */
+.process-tree {
+  margin-bottom: var(--space-md);
+}
+
+.process-item {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-sm);
+  overflow: hidden;
+  transition: all var(--transition-fast);
+}
+
+.process-item:hover {
+  border-color: var(--c-accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.process-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+  user-select: none;
+  gap: var(--space-sm);
+}
+
+.process-header:hover {
+  background: var(--c-raise);
+}
+
+.process-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex: 1;
+}
+
+.process-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-accent-soft);
+  color: var(--c-accent);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  flex-shrink: 0;
+}
+
+.process-name {
+  font-weight: 600;
+  color: var(--c-text-1);
+  font-size: var(--font-size-sm);
+}
+
+.process-status {
+  font-size: var(--font-size-xs);
+  color: var(--c-text-3);
+  margin-left: var(--space-sm);
+}
+
+.process-badge {
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.process-badge.running {
+  background: var(--c-ok-soft);
+  color: var(--c-ok);
+}
+
+.process-badge.paused {
+  background: var(--c-warn-soft);
+  color: var(--c-warn);
+}
+
+.process-badge.stopped {
+  background: var(--c-err-soft);
+  color: var(--c-err);
+}
+
+.process-toggle {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-text-3);
+  transition: transform var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.process-item.expanded .process-toggle {
+  transform: rotate(90deg);
+}
+
+.process-children {
+  display: none;
+  background: var(--c-sunken);
+  border-top: 1px solid var(--c-border);
+}
+
+.process-item.expanded .process-children {
+  display: block;
+}
+
+.sub-process-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-xs) var(--space-md);
+  border-bottom: 1px solid var(--c-border);
+  gap: var(--space-sm);
+}
+
+.sub-process-item:last-child {
+  border-bottom: none;
+}
+
+.sub-process-item:hover {
+  background: var(--c-raise);
+}
+
+.sub-process-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex: 1;
+}
+
+.sub-process-indent {
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.sub-process-name {
+  font-size: var(--font-size-sm);
+  color: var(--c-text-2);
+}
+
+.sub-process-cpu,
+.sub-process-memory {
+  font-size: var(--font-size-xs);
+  color: var(--c-text-3);
+  min-width: 60px;
+  text-align: right;
+}
+
+/* Density toggle button styles */
+.density-toggle-btn {
+  position: fixed;
+  top: calc(var(--space-lg) + 50px);
+  right: var(--space-lg);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--c-text-1);
+  transition: all var(--transition-fast);
+  margin-top: 0.5rem;
+}
+
+.density-toggle-btn:hover {
+  background: var(--c-raise);
+  border-color: var(--c-accent);
 }
