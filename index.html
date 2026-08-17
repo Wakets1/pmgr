@@ -1,515 +1,248 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>主题切换演示 - 紧凑模式</title>
-  <!-- 基础样式 -->
-  <link rel="stylesheet" href="base.css">
-  <!-- 主题样式 - 默认亮色 -->
-  <link rel="stylesheet" href="light.css" id="theme-style">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>进程管理</title>
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="light.css" id="theme-css" />
   <style>
-    .theme-toggle-btn {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 1000;
+    /* 页面特有样式 */
+    .page-content {
+      flex: 1;
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background: var(--c-surface);
-      border: 1px solid var(--c-border);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      font-size: var(--font-size-sm);
-      color: var(--c-text-1);
-      transition: all var(--transition-fast);
-    }
-    .theme-toggle-btn:hover {
-      background: var(--c-raise);
-      border-color: var(--c-accent);
-    }
-    .density-toggle-btn-inline {
-      position: fixed;
-      top: calc(1rem + 50px);
-      right: 1rem;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background: var(--c-surface);
-      border: 1px solid var(--c-border);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      font-size: var(--font-size-sm);
-      color: var(--c-text-1);
-      transition: all var(--transition-fast);
-    }
-    .density-toggle-btn-inline:hover {
-      background: var(--c-raise);
-      border-color: var(--c-accent);
-    }
-    .page-header {
-      margin-bottom: 1.5rem;
-    }
-    .page-title {
-      font-size: var(--font-size-lg);
-      font-weight: 600;
-      margin-bottom: var(--space-sm);
-      color: var(--c-text-1);
-    }
-    .section-title {
-      font-size: var(--font-size-md);
-      font-weight: 600;
-      margin: 1.5rem 0 1rem;
-      padding-bottom: var(--space-sm);
-      border-bottom: 1px solid var(--c-border);
-      color: var(--c-text-1);
-    }
-    
-    /* 进程头像样式 (类似飞书) */
-    .process-avatar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--radius-sm);
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-    .process-avatar.avatar-sm {
-      width: 28px;
-      height: 28px;
-      font-size: var(--font-size-xs);
-    }
-    .process-avatar.avatar-md {
-      width: 36px;
-      height: 36px;
-      font-size: var(--font-size-sm);
-    }
-    .process-avatar.avatar-lg {
-      width: 44px;
-      height: 44px;
-      font-size: var(--font-size-md);
+      flex-direction: column;
     }
   </style>
 </head>
 <body>
-  <!-- 主题切换按钮 -->
-  <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="切换主题">
-    <span id="theme-icon">🌙</span>
-    <span id="theme-text">暗色</span>
-  </button>
-  
-  <!-- 密度切换按钮 -->
-  <button class="density-toggle-btn-inline" onclick="toggleDensity()" aria-label="切换密度模式">
-    <span id="density-icon">⊞</span>
-    <span id="density-text">舒适</span>
-  </button>
-  
-  <div class="container">
-    <!-- 页面头部 -->
-    <header class="page-header">
-      <h1 class="page-title">主题切换演示</h1>
-      <p class="text-muted">紧凑模式下的亮色与暗色主题切换示例</p>
-    </header>
-
-    <!-- 导航示例 -->
-    <nav class="nav">
-      <a href="#" class="nav-item active">首页</a>
-      <a href="#" class="nav-item">产品</a>
-      <a href="#" class="nav-item">服务</a>
-      <a href="#" class="nav-item">关于</a>
-      <a href="#" class="nav-item">联系</a>
-    </nav>
-
-    <!-- 警示框示例 -->
-    <div class="alert alert-info">
-      <strong>提示：</strong> 点击右上角按钮可切换亮色/暗色主题。
+  <!-- 公共头部 -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-box">P</div>
+      <h1 class="app-title">进程管理</h1>
     </div>
-
-    <div class="alert alert-success">
-      <strong>成功：</strong> 操作已完成，数据已保存。
+    <div class="header-right">
+      <button class="icon-btn" id="density-toggle" title="切换密度模式">
+        <svg class="icon-svg" viewBox="0 0 24 24">
+          <path d="M3 17h18v-2H3v2zm0 3h18v-1H3v1zm0-7h18v-3H3v3zm0-9v4h18V4H3z"/>
+        </svg>
+      </button>
+      <button class="icon-btn" id="theme-toggle" title="切换主题">
+        <svg class="icon-svg" viewBox="0 0 24 24">
+          <path d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z"/>
+        </svg>
+      </button>
     </div>
+  </header>
 
-    <div class="alert alert-warning">
-      <strong>警告：</strong> 请注意检查您的输入信息。
+  <div class="page-content">
+    <!-- 进程列表区域 -->
+    <div class="process-list" id="process-list">
+      <!-- 由 JS 动态生成 -->
     </div>
-
-    <div class="alert alert-danger">
-      <strong>错误：</strong> 发生了一些问题，请重试。
-    </div>
-
-    <!-- 卡片布局 -->
-    <div class="section-title">卡片组件</div>
-    <div class="card">
-      <div class="card-header">用户信息</div>
-      <div class="card-body">
-        <p>这是一个紧凑模式的卡片组件，展示了主题变量的应用效果。</p>
-        <div class="flex mt-sm">
-          <span class="badge">默认</span>
-          <span class="badge badge-success">成功</span>
-          <span class="badge badge-warning">警告</span>
-          <span class="badge badge-danger">危险</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">数据统计</div>
-      <div class="card-body">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>指标</th>
-              <th>数值</th>
-              <th>趋势</th>
-              <th>状态</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>访问量</td>
-              <td>12,345</td>
-              <td>+15%</td>
-              <td><span class="badge badge-success">上升</span></td>
-            </tr>
-            <tr>
-              <td>转化率</td>
-              <td>3.2%</td>
-              <td>-2%</td>
-              <td><span class="badge badge-danger">下降</span></td>
-            </tr>
-            <tr>
-              <td>平均停留</td>
-              <td>4m 32s</td>
-              <td>+5%</td>
-              <td><span class="badge badge-success">上升</span></td>
-            </tr>
-            <tr>
-              <td>跳出率</td>
-              <td>42%</td>
-              <td>0%</td>
-              <td><span class="badge">稳定</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 表单组件 -->
-    <div class="section-title">表单组件</div>
-    <div class="card">
-      <div class="card-header">联系表单</div>
-      <div class="card-body">
-        <form onsubmit="event.preventDefault(); alert('表单已提交！');">
-          <div class="form-group">
-            <label class="form-label" for="name">姓名</label>
-            <input type="text" id="name" class="form-input" placeholder="请输入您的姓名">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="email">邮箱</label>
-            <input type="email" id="email" class="form-input" placeholder="example@email.com">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="message">留言</label>
-            <input type="text" id="message" class="form-input" placeholder="请输入您的留言">
-          </div>
-          <div class="flex">
-            <button type="submit" class="btn btn-primary">提交</button>
-            <button type="button" class="btn btn-secondary">取消</button>
-            <button type="button" class="btn btn-outline">重置</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- 开关组件 -->
-    <div class="section-title">交互组件</div>
-    <div class="card">
-      <div class="card-header">设置选项</div>
-      <div class="card-body">
-        <div class="flex justify-between mb-sm">
-          <span>启用通知</span>
-          <label class="toggle-switch">
-            <input type="checkbox" checked>
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        <div class="flex justify-between mb-sm">
-          <span>自动保存</span>
-          <label class="toggle-switch">
-            <input type="checkbox" checked>
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        <div class="flex justify-between mb-sm">
-          <span>深色模式</span>
-          <label class="toggle-switch">
-            <input type="checkbox" id="dark-mode-toggle" onchange="toggleTheme()">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        <div class="flex justify-between">
-          <span>隐私模式</span>
-          <label class="toggle-switch">
-            <input type="checkbox">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <!-- 进程树组件 -->
-    <div class="section-title">进程监控（可展开条目）</div>
-    <div class="card">
-      <div class="card-header">系统进程</div>
-      <div class="card-body">
-        <div class="process-tree">
-          <!-- 主进程 1 -->
-          <div class="process-item" onclick="toggleProcess(this)">
-            <div class="process-header">
-              <div class="process-info">
-                <div class="process-avatar avatar-md" style="background-color: #e3f2fd; color: #1565c0;">S</div>
-                <div>
-                  <div class="process-name">System Core <span class="process-status">PID: 1024</span></div>
-                </div>
-              </div>
-              <span class="process-badge running">运行中</span>
-              <div class="process-toggle">▶</div>
-            </div>
-            <div class="process-children">
-              <div class="sub-process-item">
-                <div class="sub-process-info">
-                  <span class="sub-process-indent"></span>
-                  <span class="sub-process-name">core-renderer</span>
-                </div>
-                <span class="sub-process-cpu">12%</span>
-                <span class="sub-process-memory">256 MB</span>
-              </div>
-              <div class="sub-process-item">
-                <div class="sub-process-info">
-                  <span class="sub-process-indent"></span>
-                  <span class="sub-process-name">core-audio</span>
-                </div>
-                <span class="sub-process-cpu">3%</span>
-                <span class="sub-process-memory">64 MB</span>
-              </div>
-              <div class="sub-process-item">
-                <div class="sub-process-info">
-                  <span class="sub-process-indent"></span>
-                  <span class="sub-process-name">core-network</span>
-                </div>
-                <span class="sub-process-cpu">8%</span>
-                <span class="sub-process-memory">128 MB</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 主进程 2 -->
-          <div class="process-item expanded" onclick="toggleProcess(this)">
-            <div class="process-header">
-              <div class="process-info">
-                <div class="process-avatar avatar-md" style="background-color: #e8f5e9; color: #2e7d32;">B</div>
-                <div>
-                  <div class="process-name">Browser Engine <span class="process-status">PID: 2048</span></div>
-                </div>
-              </div>
-              <span class="process-badge running">运行中</span>
-              <div class="process-toggle">▶</div>
-            </div>
-            <div class="process-children">
-              <div class="sub-process-item">
-                <div class="sub-process-info">
-                  <span class="sub-process-indent"></span>
-                  <span class="sub-process-name">renderer-main</span>
-                </div>
-                <span class="sub-process-cpu">25%</span>
-                <span class="sub-process-memory">512 MB</span>
-              </div>
-              <div class="sub-process-item">
-                <div class="sub-process-info">
-                  <span class="sub-process-indent"></span>
-                  <span class="sub-process-name">renderer-tab1</span>
-                </div>
-                <span class="sub-process-cpu">18%</span>
-                <span class="sub-process-memory">384 MB</span>
-              </div>
-              <div class="sub-process-item">
-                <div class="sub-process-info">
-                  <span class="sub-process-indent"></span>
-                  <span class="sub-process-name">gpu-process</span>
-                </div>
-                <span class="sub-process-cpu">15%</span>
-                <span class="sub-process-memory">256 MB</span>
-              </div>
-              <div class="sub-process-item">
-                <div class="sub-process-info">
-                  <span class="sub-process-indent"></span>
-                  <span class="sub-process-name">utility-io</span>
-                </div>
-                <span class="sub-process-cpu">5%</span>
-                <span class="sub-process-memory">96 MB</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 主进程 3 -->
-          <div class="process-item" onclick="toggleProcess(this)">
-            <div class="process-header">
-              <div class="process-info">
-                <div class="process-avatar avatar-md" style="background-color: #fff3e0; color: #ef6c00;">F</div>
-                <div>
-                  <div class="process-name">File Manager <span class="process-status">PID: 3072</span></div>
-                </div>
-              </div>
-              <span class="process-badge paused">已暂停</span>
-              <div class="process-toggle">▶</div>
-            </div>
-            <div class="process-children">
-              <div class="sub-process-item">
-                <div class="sub-process-info">
-                  <span class="sub-process-indent"></span>
-                  <span class="sub-process-name">file-watcher</span>
-                </div>
-                <span class="sub-process-cpu">0%</span>
-                <span class="sub-process-memory">32 MB</span>
-              </div>
-              <div class="sub-process-item">
-                <div class="sub-process-info">
-                  <span class="sub-process-indent"></span>
-                  <span class="sub-process-name">index-service</span>
-                </div>
-                <span class="sub-process-cpu">0%</span>
-                <span class="sub-process-memory">48 MB</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 主进程 4 -->
-          <div class="process-item" onclick="toggleProcess(this)">
-            <div class="process-header">
-              <div class="process-info">
-                <div class="process-avatar avatar-md" style="background-color: #fce4ec; color: #c2185b;">S</div>
-                <div>
-                  <div class="process-name">Security Service <span class="process-status">PID: 4096</span></div>
-                </div>
-              </div>
-              <span class="process-badge stopped">已停止</span>
-              <div class="process-toggle">▶</div>
-            </div>
-            <div class="process-children">
-              <div class="sub-process-item">
-                <div class="sub-process-info">
-                  <span class="sub-process-indent"></span>
-                  <span class="sub-process-name">antivirus-scan</span>
-                </div>
-                <span class="sub-process-cpu">0%</span>
-                <span class="sub-process-memory">0 MB</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 页脚 -->
-    <footer style="margin-top: 2rem; text-align: center; color: var(--c-text-3); font-size: var(--font-size-sm);">
-      <p>© 2024 主题切换演示 | 采用标准化 CSS 变量命名</p>
-    </footer>
   </div>
 
   <script>
+    // ===========================
+    // 模拟数据
+    // ===========================
+    const processes = [
+      {
+        id: 1,
+        name: "Chrome Browser",
+        pid: 1024,
+        status: "running",
+        children: [
+          { name: "Renderer Process", cpu: "12.5%", mem: "256 MB" },
+          { name: "GPU Process", cpu: "3.2%", mem: "128 MB" },
+          { name: "Network Service", cpu: "1.1%", mem: "64 MB" }
+        ]
+      },
+      {
+        id: 2,
+        name: "VS Code",
+        pid: 2048,
+        status: "running",
+        children: [
+          { name: "Extension Host", cpu: "5.4%", mem: "180 MB" },
+          { name: "Search Service", cpu: "2.1%", mem: "90 MB" }
+        ]
+      },
+      {
+        id: 3,
+        name: "Docker Desktop",
+        pid: 3072,
+        status: "paused",
+        children: [
+          { name: "VM Worker", cpu: "0.0%", mem: "512 MB" },
+          { name: "API Server", cpu: "0.5%", mem: "64 MB" },
+          { name: "Kubelet", cpu: "1.2%", mem: "128 MB" },
+          { name: "Proxy Service", cpu: "0.3%", mem: "32 MB" }
+        ]
+      },
+      {
+        id: 4,
+        name: "MySQL Server",
+        pid: 4096,
+        status: "stopped",
+        children: [
+          { name: "InnoDB Engine", cpu: "0.0%", mem: "0 MB" },
+          { name: "Query Cache", cpu: "0.0%", mem: "0 MB" }
+        ]
+      }
+    ];
+
+    // ===========================
+    // 工具函数
+    // ===========================
+    
+    // 根据名称首字母生成头像颜色和字符
+    function getAvatarInfo(name) {
+      const char = name.charAt(0).toUpperCase();
+      const colors = [
+        '#0e7a5c', '#1f6fb2', '#a96a00', '#bf3b30', 
+        '#8e24aa', '#3949ab', '#00897b', '#5d4037'
+      ];
+      
+      // 简单哈希算法，使相同名称总是得到相同颜色
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const colorIndex = Math.abs(hash) % colors.length;
+      
+      return {
+        char: char,
+        color: colors[colorIndex]
+      };
+    }
+
+    // 状态文本映射
+    function getStatusText(status) {
+      const map = {
+        running: '运行中',
+        paused: '已暂停',
+        stopped: '已停止'
+      };
+      return map[status] || status;
+    }
+
+    // ===========================
+    // 渲染进程列表
+    // ===========================
+    function renderProcesses() {
+      const container = document.getElementById('process-list');
+      container.innerHTML = '';
+
+      processes.forEach(proc => {
+        const avatar = getAvatarInfo(proc.name);
+        
+        const item = document.createElement('div');
+        item.className = 'process-item';
+        item.dataset.id = proc.id;
+
+        item.innerHTML = `
+          <div class="process-main">
+            <div class="proc-avatar" style="background-color: ${avatar.color}">
+              ${avatar.char}
+            </div>
+            <div class="proc-info">
+              <div class="proc-name">${proc.name}</div>
+              <div class="proc-meta">
+                <span>PID: ${proc.pid}</span>
+                <span class="proc-status status-${proc.status}">● ${getStatusText(proc.status)}</span>
+              </div>
+            </div>
+            <svg class="icon-svg proc-expand-icon" viewBox="0 0 24 24">
+              <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+            </svg>
+          </div>
+          <div class="sub-processes">
+            <div class="sub-list">
+              ${proc.children.map(child => `
+                <div class="sub-item">
+                  <span class="sub-name">${child.name}</span>
+                  <span class="sub-stat">CPU: ${child.cpu} | MEM: ${child.mem}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+
+        // 点击展开/收起
+        item.querySelector('.process-main').addEventListener('click', () => {
+          item.classList.toggle('expanded');
+        });
+
+        container.appendChild(item);
+      });
+    }
+
+    // ===========================
     // 主题切换逻辑
-    let isDarkMode = false;
-    let isComfortableMode = false;
-    
-    // 从 localStorage 读取用户偏好
-    function loadThemePreference() {
-      const saved = localStorage.getItem('theme');
-      if (saved) {
-        isDarkMode = saved === 'dark';
+    // ===========================
+    const themeToggle = document.getElementById('theme-toggle');
+    const densityToggle = document.getElementById('density-toggle');
+    const themeCss = document.getElementById('theme-css');
+
+    // 初始化主题
+    function initTheme() {
+      const savedTheme = localStorage.getItem('pm-theme');
+      const savedDensity = localStorage.getItem('pm-density');
+      
+      // 主题
+      if (savedTheme === 'dark') {
+        themeCss.href = 'dark.css';
+        themeToggle.classList.add('active');
       } else {
-        // 检测系统偏好
-        isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        themeCss.href = 'light.css';
+        themeToggle.classList.remove('active');
       }
-      applyTheme();
-    }
-    
-    // 从 localStorage 读取密度偏好
-    function loadDensityPreference() {
-      const saved = localStorage.getItem('density');
-      if (saved) {
-        isComfortableMode = saved === 'comfortable';
-      }
-      applyDensity();
-    }
-    
-    // 应用主题
-    function applyTheme() {
-      const themeLink = document.getElementById('theme-style');
-      const themeIcon = document.getElementById('theme-icon');
-      const themeText = document.getElementById('theme-text');
-      const darkModeToggle = document.getElementById('dark-mode-toggle');
-      
-      if (isDarkMode) {
-        themeLink.href = 'dark.css';
-        themeIcon.textContent = '☀️';
-        themeText.textContent = '亮色';
-        darkModeToggle.checked = true;
-        document.body.setAttribute('data-theme', 'dark');
+
+      // 密度
+      if (savedDensity === 'comfortable') {
+        document.body.classList.add('mode-comfortable');
+        densityToggle.classList.add('active');
       } else {
-        themeLink.href = 'light.css';
-        themeIcon.textContent = '🌙';
-        themeText.textContent = '暗色';
-        darkModeToggle.checked = false;
-        document.body.removeAttribute('data-theme');
+        document.body.classList.remove('mode-comfortable');
+        densityToggle.classList.remove('active');
       }
-      
-      // 保存到 localStorage
-      localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     }
-    
-    // 应用密度模式
-    function applyDensity() {
-      const densityIcon = document.getElementById('density-icon');
-      const densityText = document.getElementById('density-text');
-      
-      if (isComfortableMode) {
-        document.body.setAttribute('data-density', 'comfortable');
-        densityIcon.textContent = '⊠';
-        densityText.textContent = '紧凑';
-      } else {
-        document.body.removeAttribute('data-density');
-        densityIcon.textContent = '⊞';
-        densityText.textContent = '舒适';
-      }
-      
-      // 保存到 localStorage
-      localStorage.setItem('density', isComfortableMode ? 'comfortable' : 'compact');
-    }
-    
+
     // 切换主题
-    function toggleTheme() {
-      isDarkMode = !isDarkMode;
-      applyTheme();
-    }
-    
-    // 切换密度模式
-    function toggleDensity() {
-      isComfortableMode = !isComfortableMode;
-      applyDensity();
-    }
-    
-    // 切换进程展开/折叠
-    function toggleProcess(element) {
-      element.classList.toggle('expanded');
-    }
-    
-    // 页面加载时初始化主题和密度
-    loadThemePreference();
-    loadDensityPreference();
+    themeToggle.addEventListener('click', () => {
+      const isDark = themeCss.getAttribute('href') === 'dark.css';
+      
+      if (isDark) {
+        themeCss.href = 'light.css';
+        themeToggle.classList.remove('active');
+        localStorage.setItem('pm-theme', 'light');
+      } else {
+        themeCss.href = 'dark.css';
+        themeToggle.classList.add('active');
+        localStorage.setItem('pm-theme', 'dark');
+      }
+    });
+
+    // 切换密度
+    densityToggle.addEventListener('click', () => {
+      const isComfortable = document.body.classList.contains('mode-comfortable');
+      
+      if (isComfortable) {
+        document.body.classList.remove('mode-comfortable');
+        densityToggle.classList.remove('active');
+        localStorage.setItem('pm-density', 'compact');
+      } else {
+        document.body.classList.add('mode-comfortable');
+        densityToggle.classList.add('active');
+        localStorage.setItem('pm-density', 'comfortable');
+      }
+    });
+
+    // 初始化
+    initTheme();
+    renderProcesses();
   </script>
 </body>
 </html>
