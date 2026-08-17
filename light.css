@@ -1,26 +1,36 @@
 /* Light Theme Variables - Compact Mode */
 :root {
-  /* Color Palette */
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f8f9fa;
-  --color-bg-tertiary: #e9ecef;
-  
-  --color-text-primary: #212529;
-  --color-text-secondary: #495057;
-  --color-text-muted: #6c757d;
-  
-  --color-border: #dee2e6;
-  --color-border-light: #e9ecef;
-  
-  --color-accent: #0d6efd;
-  --color-accent-hover: #0b5ed7;
-  --color-accent-light: rgba(13, 110, 253, 0.1);
-  
-  --color-success: #198754;
-  --color-warning: #ffc107;
-  --color-danger: #dc3545;
-  --color-info: #0dcaf0;
-  
+  /* —— 颜色 · 基础 —— */
+  --c-bg:        #f2f4ef;
+  --c-surface:   #ffffff;
+  --c-raise:     #f8faf6;   /* 浮层/嵌套面板 */
+  --c-sunken:    #e9ece5;   /* 凹陷区/输入底 */
+  --c-border:    #d7dbd1;
+  --c-border-hi: #b7bdae;
+
+  /* —— 颜色 · 文字（三级）—— */
+  --c-text-1: #20251f;
+  --c-text-2: #5b6357;
+  --c-text-3: #8f968a;
+
+  /* —— 颜色 · 强调 —— */
+  --c-accent:        #0e7a5c;
+  --c-accent-hover:  #0b6a50;
+  --c-accent-active: #095a44;
+  --c-accent-soft:   #ddefe7;
+  --c-on-accent:     #ffffff;
+
+  /* —— 颜色 · 状态 —— */
+  --c-ok:        #1d8348;
+  --c-ok-soft:   #ddf1e2;
+  --c-warn:      #a96a00;
+  --c-warn-soft: #faedcf;
+  --c-err:       #bf3b30;
+  --c-err-soft:  #f9e4e1;
+  --c-on-err:    #ffffff;
+  --c-info:      #1f6fb2;
+  --c-info-soft: #e0edf8;
+
   /* Spacing - Compact */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
@@ -51,6 +61,6 @@
 
 /* Dark theme slider adjustment */
 input:checked + .toggle-slider {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
+  background-color: var(--c-accent);
+  border-color: var(--c-accent);
 }
