@@ -30,6 +30,27 @@
       background: var(--c-raise);
       border-color: var(--c-accent);
     }
+    .density-toggle-btn-inline {
+      position: fixed;
+      top: calc(1rem + 50px);
+      right: 1rem;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--font-size-sm);
+      color: var(--c-text-1);
+      transition: all var(--transition-fast);
+    }
+    .density-toggle-btn-inline:hover {
+      background: var(--c-raise);
+      border-color: var(--c-accent);
+    }
     .page-header {
       margin-bottom: 1.5rem;
     }
@@ -47,6 +68,31 @@
       border-bottom: 1px solid var(--c-border);
       color: var(--c-text-1);
     }
+    
+    /* 进程头像样式 (类似飞书) */
+    .process-avatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .process-avatar.avatar-sm {
+      width: 28px;
+      height: 28px;
+      font-size: var(--font-size-xs);
+    }
+    .process-avatar.avatar-md {
+      width: 36px;
+      height: 36px;
+      font-size: var(--font-size-sm);
+    }
+    .process-avatar.avatar-lg {
+      width: 44px;
+      height: 44px;
+      font-size: var(--font-size-md);
+    }
   </style>
 </head>
 <body>
@@ -54,6 +100,12 @@
   <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="切换主题">
     <span id="theme-icon">🌙</span>
     <span id="theme-text">暗色</span>
+  </button>
+  
+  <!-- 密度切换按钮 -->
+  <button class="density-toggle-btn-inline" onclick="toggleDensity()" aria-label="切换密度模式">
+    <span id="density-icon">⊞</span>
+    <span id="density-text">舒适</span>
   </button>
   
   <div class="container">
@@ -209,6 +261,159 @@
       </div>
     </div>
 
+    <!-- 进程树组件 -->
+    <div class="section-title">进程监控（可展开条目）</div>
+    <div class="card">
+      <div class="card-header">系统进程</div>
+      <div class="card-body">
+        <div class="process-tree">
+          <!-- 主进程 1 -->
+          <div class="process-item" onclick="toggleProcess(this)">
+            <div class="process-header">
+              <div class="process-info">
+                <div class="process-avatar avatar-md" style="background-color: #e3f2fd; color: #1565c0;">S</div>
+                <div>
+                  <div class="process-name">System Core <span class="process-status">PID: 1024</span></div>
+                </div>
+              </div>
+              <span class="process-badge running">运行中</span>
+              <div class="process-toggle">▶</div>
+            </div>
+            <div class="process-children">
+              <div class="sub-process-item">
+                <div class="sub-process-info">
+                  <span class="sub-process-indent"></span>
+                  <span class="sub-process-name">core-renderer</span>
+                </div>
+                <span class="sub-process-cpu">12%</span>
+                <span class="sub-process-memory">256 MB</span>
+              </div>
+              <div class="sub-process-item">
+                <div class="sub-process-info">
+                  <span class="sub-process-indent"></span>
+                  <span class="sub-process-name">core-audio</span>
+                </div>
+                <span class="sub-process-cpu">3%</span>
+                <span class="sub-process-memory">64 MB</span>
+              </div>
+              <div class="sub-process-item">
+                <div class="sub-process-info">
+                  <span class="sub-process-indent"></span>
+                  <span class="sub-process-name">core-network</span>
+                </div>
+                <span class="sub-process-cpu">8%</span>
+                <span class="sub-process-memory">128 MB</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 主进程 2 -->
+          <div class="process-item expanded" onclick="toggleProcess(this)">
+            <div class="process-header">
+              <div class="process-info">
+                <div class="process-avatar avatar-md" style="background-color: #e8f5e9; color: #2e7d32;">B</div>
+                <div>
+                  <div class="process-name">Browser Engine <span class="process-status">PID: 2048</span></div>
+                </div>
+              </div>
+              <span class="process-badge running">运行中</span>
+              <div class="process-toggle">▶</div>
+            </div>
+            <div class="process-children">
+              <div class="sub-process-item">
+                <div class="sub-process-info">
+                  <span class="sub-process-indent"></span>
+                  <span class="sub-process-name">renderer-main</span>
+                </div>
+                <span class="sub-process-cpu">25%</span>
+                <span class="sub-process-memory">512 MB</span>
+              </div>
+              <div class="sub-process-item">
+                <div class="sub-process-info">
+                  <span class="sub-process-indent"></span>
+                  <span class="sub-process-name">renderer-tab1</span>
+                </div>
+                <span class="sub-process-cpu">18%</span>
+                <span class="sub-process-memory">384 MB</span>
+              </div>
+              <div class="sub-process-item">
+                <div class="sub-process-info">
+                  <span class="sub-process-indent"></span>
+                  <span class="sub-process-name">gpu-process</span>
+                </div>
+                <span class="sub-process-cpu">15%</span>
+                <span class="sub-process-memory">256 MB</span>
+              </div>
+              <div class="sub-process-item">
+                <div class="sub-process-info">
+                  <span class="sub-process-indent"></span>
+                  <span class="sub-process-name">utility-io</span>
+                </div>
+                <span class="sub-process-cpu">5%</span>
+                <span class="sub-process-memory">96 MB</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 主进程 3 -->
+          <div class="process-item" onclick="toggleProcess(this)">
+            <div class="process-header">
+              <div class="process-info">
+                <div class="process-avatar avatar-md" style="background-color: #fff3e0; color: #ef6c00;">F</div>
+                <div>
+                  <div class="process-name">File Manager <span class="process-status">PID: 3072</span></div>
+                </div>
+              </div>
+              <span class="process-badge paused">已暂停</span>
+              <div class="process-toggle">▶</div>
+            </div>
+            <div class="process-children">
+              <div class="sub-process-item">
+                <div class="sub-process-info">
+                  <span class="sub-process-indent"></span>
+                  <span class="sub-process-name">file-watcher</span>
+                </div>
+                <span class="sub-process-cpu">0%</span>
+                <span class="sub-process-memory">32 MB</span>
+              </div>
+              <div class="sub-process-item">
+                <div class="sub-process-info">
+                  <span class="sub-process-indent"></span>
+                  <span class="sub-process-name">index-service</span>
+                </div>
+                <span class="sub-process-cpu">0%</span>
+                <span class="sub-process-memory">48 MB</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 主进程 4 -->
+          <div class="process-item" onclick="toggleProcess(this)">
+            <div class="process-header">
+              <div class="process-info">
+                <div class="process-avatar avatar-md" style="background-color: #fce4ec; color: #c2185b;">S</div>
+                <div>
+                  <div class="process-name">Security Service <span class="process-status">PID: 4096</span></div>
+                </div>
+              </div>
+              <span class="process-badge stopped">已停止</span>
+              <div class="process-toggle">▶</div>
+            </div>
+            <div class="process-children">
+              <div class="sub-process-item">
+                <div class="sub-process-info">
+                  <span class="sub-process-indent"></span>
+                  <span class="sub-process-name">antivirus-scan</span>
+                </div>
+                <span class="sub-process-cpu">0%</span>
+                <span class="sub-process-memory">0 MB</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 页脚 -->
     <footer style="margin-top: 2rem; text-align: center; color: var(--c-text-3); font-size: var(--font-size-sm);">
       <p>© 2024 主题切换演示 | 采用标准化 CSS 变量命名</p>
@@ -218,6 +423,7 @@
   <script>
     // 主题切换逻辑
     let isDarkMode = false;
+    let isComfortableMode = false;
     
     // 从 localStorage 读取用户偏好
     function loadThemePreference() {
@@ -229,6 +435,15 @@
         isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
       }
       applyTheme();
+    }
+    
+    // 从 localStorage 读取密度偏好
+    function loadDensityPreference() {
+      const saved = localStorage.getItem('density');
+      if (saved) {
+        isComfortableMode = saved === 'comfortable';
+      }
+      applyDensity();
     }
     
     // 应用主题
@@ -256,14 +471,45 @@
       localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     }
     
+    // 应用密度模式
+    function applyDensity() {
+      const densityIcon = document.getElementById('density-icon');
+      const densityText = document.getElementById('density-text');
+      
+      if (isComfortableMode) {
+        document.body.setAttribute('data-density', 'comfortable');
+        densityIcon.textContent = '⊠';
+        densityText.textContent = '紧凑';
+      } else {
+        document.body.removeAttribute('data-density');
+        densityIcon.textContent = '⊞';
+        densityText.textContent = '舒适';
+      }
+      
+      // 保存到 localStorage
+      localStorage.setItem('density', isComfortableMode ? 'comfortable' : 'compact');
+    }
+    
     // 切换主题
     function toggleTheme() {
       isDarkMode = !isDarkMode;
       applyTheme();
     }
     
-    // 页面加载时初始化主题
+    // 切换密度模式
+    function toggleDensity() {
+      isComfortableMode = !isComfortableMode;
+      applyDensity();
+    }
+    
+    // 切换进程展开/折叠
+    function toggleProcess(element) {
+      element.classList.toggle('expanded');
+    }
+    
+    // 页面加载时初始化主题和密度
     loadThemePreference();
+    loadDensityPreference();
   </script>
 </body>
 </html>
